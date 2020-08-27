@@ -1,18 +1,12 @@
-#include <stdlib.h>
-#include <stdio.h>
 #include <time.h>
-#include <string.h>
 
-typedef struct{
-    size_t max_time;
-    size_t max_str_len;
-}Options;
+#include "argument_handler.h"
 
-void handle_parameters(const int argc, const char ** argv, Options* opt);
-int is_argument(const int argc, const char** argv, const char* test_arg);
-size_t read_default_uint_parameter(const int argc, const char** argv, const char* par_name, const size_t def_val);
-void handle_parameters(const int argc, const char ** argv, Options* opt);
-void generate_random_string(char** str, size_t str_len);
+void generate_random_string(char** str, const size_t str_len);
+size_t get_random_in_range(const size_t low, const size_t high);
+size_t generate_random_arguments(char*** args, const size_t max_str_len, const size_t max_arg_num);
+void print_arguments(const char** args, const size_t count);
+void free_arguments(char** args, const size_t count);
 
 
 int main(int argc, char** argv){
@@ -23,55 +17,53 @@ int main(int argc, char** argv){
     srand((uint)(time(NULL)));
     time(&t_current);
     while(difftime(t_current,t_start)<opt.max_time){
-        char* str;
-        generate_random_string(&str, opt.max_str_len);
-        printf("%s\n", str);
-        free(str);
+        char** args;
+        size_t arg_num = generate_random_arguments(&args, opt.max_str_len, opt.max_arg_num);
+        print_arguments((const char**)args, arg_num);
+        free_arguments(args, arg_num);
         time(&t_current);
     }
     return EXIT_SUCCESS;
 }
 
-
-int is_argument(const int argc, const char** argv, const char* test_arg){
-    for(int i=0; i<argc; i++){
-        if(!strcmp(argv[i], test_arg)){
-            return i;
-        }
+size_t get_random_in_range(const size_t low, const size_t high){
+    if(low>high){
+        printf("Incorrect range for random number \n");
+        exit(1);
     }
-    return -1;
+    double res = (double)low + 1.0*rand()/RAND_MAX*((double)(high - low));
+    return (size_t)(res);
 }
 
-
-size_t read_default_uint_parameter(const int argc, const char** argv, const char* par_name, const size_t def_val){
-    size_t par = def_val;
-    int idx = is_argument(argc, argv, par_name);
-    if(idx<0){
-        fprintf(stderr, "Parameter %s was not set --> will use default value %zu\n", par_name, def_val);
-        return par;
-    }
-    if(argc<=idx){
-        fprintf(stderr, "Please specify value of parameter %s\n", par_name);
-        exit(EXIT_FAILURE);
-    }
-    int tmp = atoi(argv[idx+1]);
-    if(tmp<0){
-        fprintf(stderr, "Parameter %s should have positive value\n", par_name);
-        exit(EXIT_FAILURE);
-    }
-    return (size_t)tmp;
-}
-
-void handle_parameters(const int argc, const char ** argv, Options* opt){
-    opt->max_time = read_default_uint_parameter(argc, argv, "-max_time", 60);
-    opt->max_str_len = read_default_uint_parameter(argc, argv, "-max_str_len", 100);
-}
-
-
-void generate_random_string(char** str, size_t str_len){
+void generate_random_string(char** str, const size_t max_str_len){
+    size_t str_len = get_random_in_range(0, max_str_len);
     char* tmp_str = calloc(str_len, sizeof(char));
     for(size_t i=0; i<str_len; i++){
-        tmp_str[i] = (char)(32+rand()%95);
+        tmp_str[i] = (char)(get_random_in_range(32, 127));
     }
     *str = tmp_str;
+}
+
+size_t generate_random_arguments(char*** args, const size_t max_str_len, const size_t max_arg_num){
+    size_t arg_num = get_random_in_range(1, max_arg_num);
+    char** tmp_args = calloc(arg_num, sizeof(char*));
+    for(size_t i=0; i<arg_num; i++){
+        generate_random_string(&tmp_args[i], max_str_len);
+    }
+    *args = tmp_args;
+    return arg_num;
+}
+
+void free_arguments(char** args, const size_t count){
+    for(size_t i=0; i<count; i++){
+        free(args[i]);
+    }
+    free(args);
+}
+
+void print_arguments(const char** args, const size_t count){
+    for(size_t i=0; i<count; i++){
+        printf("%s ", args[i]);
+    }
+    printf("\n");
 }
