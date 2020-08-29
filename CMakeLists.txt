@@ -13,3 +13,7 @@ target_compile_options(simple_fuzzer PRIVATE -Wall -Wextra -Wshadow -Wpedantic -
 
 target_include_directories(simple_fuzzer PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
+if(SANITIZE)
+	target_compile_options(simple_fuzzer PRIVATE -g -O0 -fsanitize=address)
+	target_link_libraries(simple_fuzzer PRIVATE -lasan)
+endif()

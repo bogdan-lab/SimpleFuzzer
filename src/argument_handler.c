@@ -32,18 +32,18 @@ size_t read_default_uint_parameter(const int argc, const char** argv, const char
 
 void read_default_string_parameter(char** str, const int argc, const char** argv, const char* par_name, const char* def_val){
     int idx = is_argument(argc, argv, "-arg_names");
-    char* tmp_str = calloc(strlen(def_val), sizeof(char));
-    strcpy(tmp_str, def_val);
     if(idx<0){
         fprintf(stderr, "Parameter %s was not set --> will use default value '%s'\n", par_name, def_val);
+        char* tmp_str = calloc(strlen(def_val)+1, sizeof(char));
+        strcpy(tmp_str, def_val);
         *str = tmp_str;
         return;
     }
-     if(argc<=idx+1){
+    if(argc<=idx+1){
         fprintf(stderr, "Please specify value of parameter %s\n", par_name);
         exit(EXIT_FAILURE);
     }
-    tmp_str = (char*)realloc(tmp_str, sizeof(char)*strlen(argv[idx+1]));
+    char* tmp_str = calloc(strlen(argv[idx+1])+1, sizeof(char));
     strcpy(tmp_str, argv[idx+1]);
     *str = tmp_str;
     return;
@@ -64,7 +64,7 @@ void handle_parameters(const int argc, const char ** argv, Options* opt){
         char* pch;
         pch = strtok(args_str, " ");
         while(pch!=NULL){
-            opt->arg_names[idx] = calloc(strlen(pch), sizeof(char));
+            opt->arg_names[idx] = calloc(strlen(pch)+1, sizeof(char));
             strcpy(opt->arg_names[idx], pch);
             pch = strtok(NULL, " ");
             idx++;
