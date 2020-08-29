@@ -5,7 +5,9 @@ project(SimpleFuzzer
 
 add_executable(simple_fuzzer
                 src/simple_fuzzer.c
-                src/argument_handler.c)
+                src/argument_handler.c
+                src/generators.c
+                src/utils.c)
 
 target_compile_options(simple_fuzzer PRIVATE -Wall -Wextra -Wshadow -Wpedantic -Wunused
                                         -Wconversion -Wsign-conversion

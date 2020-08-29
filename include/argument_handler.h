@@ -8,7 +8,6 @@
 typedef struct{
     size_t max_time;
     size_t max_str_len;
-    size_t max_arg_num;
     char** arg_names;
     size_t arg_name_count;
 }Options;

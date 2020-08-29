@@ -52,7 +52,6 @@ void read_default_string_parameter(char** str, const int argc, const char** argv
 void handle_parameters(const int argc, const char ** argv, Options* opt){
     opt->max_time = read_default_uint_parameter(argc, argv, "-max_time", 60);
     opt->max_str_len = read_default_uint_parameter(argc, argv, "-max_str_len", 100);
-    opt->max_arg_num = read_default_uint_parameter(argc, argv, "-max_arg_num", 1);
     char* args_str;
     read_default_string_parameter(&args_str, argc, argv, "-arg_names", "");
     if(strlen(args_str)==0){
