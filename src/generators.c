@@ -77,3 +77,29 @@ size_t generate_cmd_arguments(char*** gen_argv, const Options* opt){
 }
 
 
+void generate_words_for_file(char*** words, const size_t word_num, const char** db, const size_t db_count){
+    char** tmp_words = calloc(word_num, sizeof(char*));
+    for(size_t i=0; i<word_num; i++){
+        size_t idx = (size_t)((double)rand()/RAND_MAX * (double)(db_count-1));
+        tmp_words[i] = calloc(strlen(db[idx])+1, sizeof(char));
+        strcpy(tmp_words[i], db[idx]);
+    }
+    *words = tmp_words;
+}
+
+void generate_random_file(const Options *opt){
+    srand((uint)opt->seed);
+    char** words = calloc(opt->word_num, sizeof(char*));
+    if(strlen(opt->input_file)==0){
+        generate_words_for_file(&words, opt->word_num, word_db, word_db_count);
+    }
+    else{
+        char** new_db;
+        size_t new_db_count = download_database(&new_db, opt->input_file);
+        generate_words_for_file(&words, opt->word_num, (const char**)new_db, new_db_count);
+        free_string_array(new_db, opt->word_num);
+    }
+    write_words_to_file((const char**)words, opt->word_num, opt->output_file);
+    free_string_array(words, opt->word_num);
+}
+
