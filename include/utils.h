@@ -1,11 +1,8 @@
 #ifndef UTILS_HEADER
 #define UTILS_HEADER
 
-#include <stdio.h>
 #include <stdlib.h>
-#include <string.h>
 
-#include "argument_handler.h"
 
 void shuffle(int** arr, const size_t arr_len);
 void swap(int* lhs, int* rhs);

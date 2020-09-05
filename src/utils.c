@@ -1,3 +1,6 @@
+#include <string.h>
+#include <stdio.h>
+
 #include "utils.h"
 
 size_t range(int** range_arr, const int low, const int high, const int step){
