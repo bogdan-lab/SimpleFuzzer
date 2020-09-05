@@ -4,6 +4,7 @@
 #include <stdlib.h>
 
 
+void* allocate(const size_t num, const size_t size);
 void shuffle(int** arr, const size_t arr_len);
 void swap(int* lhs, int* rhs);
 size_t range(int** range_arr, const int low, const int high, const int step);

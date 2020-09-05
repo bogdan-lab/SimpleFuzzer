@@ -37,18 +37,17 @@ void free_string_array(char** args, const size_t count){
     free(args);
 }
 
-
 size_t download_database(char*** new_db, const char* input_file){
     FILE* input;
     input = fopen(input_file, "r");
     if(input){
         size_t full_size = 1024;
-        char** input_data = calloc(full_size, sizeof(char*));
+        char** input_data = allocate(full_size, sizeof(char*));
         size_t idx = 0;
         char buff[255];
         while(fscanf(input, "%s", buff)!=EOF){
             input_data[idx] = calloc(strlen(buff)+1, sizeof(char));
-            strcpy(input_data[idx], buff);
+            memcpy(input_data[idx], buff, strlen(buff)+1);
             idx++;
             if(idx == full_size){
                 full_size*=2;
@@ -79,5 +78,15 @@ void write_words_to_file(const char** words, const size_t word_num, const char* 
         printf("Could not open file %s\n", out_fname);
         exit(EXIT_FAILURE);
     }
+}
+
+
+void* allocate(const size_t num, const size_t size){
+    void* ptr = calloc(num, size);
+    if(!ptr){
+        printf("Allocation failed\n");
+        exit(EXIT_FAILURE);
+    }
+    return ptr;
 }
 

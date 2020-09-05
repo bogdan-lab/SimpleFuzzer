@@ -31,7 +31,7 @@ size_t read_default_uint_parameter(const int argc, const char** argv, const char
 }
 
 void read_default_string_parameter(char** str, const int argc, const char** argv, const char* par_name, const char* def_val){
-    int idx = is_argument(argc, argv, "-arg_names");
+    int idx = is_argument(argc, argv, par_name);
     if(idx<0){
         fprintf(stderr, "Parameter %s was not set --> will use default value '%s'\n", par_name, def_val);
         char* tmp_str = calloc(strlen(def_val)+1, sizeof(char));

@@ -45,12 +45,19 @@ install(FILES include/generators.h
 	RENAME fuzz_generators.h)
 
 #------------------------------------------------------------------------
+
 set(CMAKE_INSTALL_RPATH ${LIB_INSTALL_DIR})
 add_executable(simple_fuzzer
                 src/simple_fuzzer.c
                 src/argument_handler.c
 		$<TARGET_OBJECTS:utilities>
                 )
+
+if(SANITIZE)
+	target_compile_options(simple_fuzzer PRIVATE -g -O0 -fsanitize=address)
+	target_link_libraries(simple_fuzzer PRIVATE -lasan)
+endif()
+
 
 target_compile_options(simple_fuzzer PRIVATE -Wall -Wextra -Wshadow -Wpedantic -Wunused -Wincompatible-pointer-types
                                         -Wconversion -Wsign-conversion -Wimplicit-function-declaration
@@ -65,7 +72,4 @@ install(TARGETS simple_fuzzer
 
 #-----------------------------------------------------------------------
 
-if(SANITIZE)
-	target_compile_options(simple_fuzzer PRIVATE -g -O0 -fsanitize=address)
-	target_link_libraries(simple_fuzzer PRIVATE -lasan)
-endif()
+
