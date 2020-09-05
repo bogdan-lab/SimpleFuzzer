@@ -34,13 +34,6 @@ void free_string_array(char** args, const size_t count){
     free(args);
 }
 
-void print_arguments(const char** args, const size_t count){
-    for(size_t i=0; i<count; i++){
-        printf("%s ", args[i]);
-    }
-    printf("\n");
-}
-
 
 size_t download_database(char*** new_db, const char* input_file){
     FILE* input;

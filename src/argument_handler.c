@@ -50,39 +50,15 @@ void read_default_string_parameter(char** str, const int argc, const char** argv
 }
 
 void handle_parameters(const int argc, const char ** argv, Options* opt){
-    opt->max_time = read_default_uint_parameter(argc, argv, "-max_time", 60);
-    opt->max_str_len = read_default_uint_parameter(argc, argv, "-max_str_len", 100);
     read_default_string_parameter(&opt->input_file, argc, argv, "-input_file", "");
     read_default_string_parameter(&opt->output_file, argc, argv, "-output_file", "generated_file");
     opt->word_num = read_default_uint_parameter(argc, argv, "-word_num", 100);
     opt->seed = read_default_uint_parameter(argc, argv, "-seed", (size_t)time(NULL));
-    char* args_str;
-    read_default_string_parameter(&args_str, argc, argv, "-arg_names", "");
-    if(strlen(args_str)==0){
-        opt->arg_name_count=0;
-    }
-    else {
-        opt->arg_names = calloc(strlen(args_str), sizeof(char*));
-        size_t idx=0;
-        char* pch;
-        pch = strtok(args_str, " ");
-        while(pch!=NULL){
-            opt->arg_names[idx] = calloc(strlen(pch)+1, sizeof(char));
-            strcpy(opt->arg_names[idx], pch);
-            pch = strtok(NULL, " ");
-            idx++;
-        }
-        opt->arg_name_count = idx;
-        opt->arg_names = realloc(opt->arg_names, sizeof(char*)*opt->arg_name_count);
-    }
 }
 
 
 void init_options(Options* opt){
-    opt->max_time = 0;
-    opt->max_str_len = 0;
-    opt->arg_names = NULL;
-    opt->arg_name_count = 0;
+    opt->word_num = 0;
     opt->input_file = NULL;
     opt->output_file = NULL;
     opt->seed = 0;
@@ -92,12 +68,6 @@ void init_options(Options* opt){
 void free_options(Options* opt){
     free(opt->input_file);
     free(opt->output_file);
-    if(opt->arg_names!=NULL){
-        for(size_t i=0; i<opt->arg_name_count; i++){
-            free(opt->arg_names[i]);
-        }
-        free(opt->arg_names);
-    }
 }
 
 
